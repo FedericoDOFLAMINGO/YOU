@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
+ 
   :root {
     --red: #c0392b;
     --red-light: #e74c3c;
@@ -17,20 +18,20 @@
     --dark: #1a0a0a;
     --text: #2c1a1a;
   }
-
+ 
   html, body {
     width: 100%; height: 100%;
     overflow: hidden;
     background: var(--dark);
     font-family: 'Cormorant Garamond', serif;
   }
-
+ 
   /* ── STARFIELD ── */
   #stars {
     position: fixed; inset: 0; z-index: 0;
     pointer-events: none;
   }
-
+ 
   /* ── PÁGINAS ── */
   .page {
     position: fixed; inset: 0;
@@ -43,24 +44,24 @@
     opacity: 0; pointer-events: none;
     transform: translateY(30px);
   }
-
+ 
   /* ── PÁGINA 1: HILO ── */
   #page1 {
     gap: 2rem;
   }
-
+ 
   #thread-container {
     width: 100vw;
     height: 220px;
     position: relative;
   }
-
+ 
   #thread-svg {
     width: 100%;
     height: 100%;
     overflow: visible;
   }
-
+ 
   .thread-path {
     fill: none;
     stroke: var(--red);
@@ -69,7 +70,7 @@
     stroke-linejoin: round;
     filter: drop-shadow(0 0 4px var(--red-glow));
   }
-
+ 
   /* ── SUBTITLE ── */
   #subtitle {
     font-family: 'Pinyon Script', cursive;
@@ -80,7 +81,7 @@
     animation: fadeInText 1.5s ease 0.5s forwards;
     letter-spacing: 0.02em;
   }
-
+ 
   /* ── BOTÓN ── */
   #open-btn {
     opacity: 0;
@@ -110,7 +111,7 @@
   #open-btn.visible {
     animation: fadeInBtn 1.2s ease forwards;
   }
-
+ 
   /* ── PÁGINA 2: CARTA ── */
   #page2 {
     padding: 3rem 1rem 3rem;
@@ -118,7 +119,7 @@
     align-items: center;
     justify-content: flex-start;
   }
-
+ 
   .carta-envelope {
     max-width: 640px;
     width: 100%;
@@ -128,7 +129,7 @@
     position: relative;
     box-shadow: 0 0 60px rgba(192,57,43,0.12), 0 20px 60px rgba(0,0,0,0.5);
   }
-
+ 
   .carta-envelope::before {
     content: '';
     position: absolute;
@@ -136,7 +137,7 @@
     height: 3px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
   }
-
+ 
   .carta-envelope::after {
     content: '';
     position: absolute;
@@ -144,7 +145,7 @@
     height: 3px;
     background: linear-gradient(90deg, transparent, var(--red-light), transparent);
   }
-
+ 
   .carta-ornament {
     text-align: center;
     font-size: 1.4rem;
@@ -153,7 +154,7 @@
     margin-bottom: 2rem;
     letter-spacing: 0.5em;
   }
-
+ 
   .carta-saludo {
     font-family: 'Pinyon Script', cursive;
     font-size: 2.6rem;
@@ -161,7 +162,7 @@
     margin-bottom: 1.5rem;
     line-height: 1.2;
   }
-
+ 
   .carta-body p {
     font-size: 1.125rem;
     color: var(--text);
@@ -169,12 +170,12 @@
     margin-bottom: 1.4rem;
     font-weight: 300;
   }
-
+ 
   .carta-body em {
     font-style: italic;
     color: #6b1a1a;
   }
-
+ 
   .carta-highlight {
     font-family: 'Pinyon Script', cursive;
     font-size: 1.6rem;
@@ -184,7 +185,7 @@
     margin: 1.5rem 0;
     line-height: 1.4;
   }
-
+ 
   .carta-divider {
     display: flex;
     align-items: center;
@@ -202,7 +203,7 @@
     font-size: 0.9rem;
     color: var(--red);
   }
-
+ 
   .dedicatoria {
     margin-top: 2.5rem;
     padding: 1.5rem;
@@ -210,7 +211,7 @@
     background: rgba(192,57,43,0.04);
     text-align: center;
   }
-
+ 
   .dedicatoria p {
     font-family: 'Pinyon Script', cursive;
     font-size: 1.5rem;
@@ -218,14 +219,14 @@
     line-height: 1.6;
     margin-bottom: 0.5rem !important;
   }
-
+ 
   .dedicatoria small {
     font-style: italic;
     font-size: 0.875rem;
     color: #8b4a4a;
     letter-spacing: 0.05em;
   }
-
+ 
   .firma {
     margin-top: 2rem;
     text-align: right;
@@ -242,7 +243,52 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
-
+ 
+  /* ── MARCO DE FOTO ── */
+  .foto-marco {
+    margin: 2rem auto 0;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+ 
+  .foto-marco::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border: 1px solid rgba(192,57,43,0.25);
+    pointer-events: none;
+  }
+ 
+  .foto-marco::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border: 1px solid rgba(212,168,67,0.35);
+    pointer-events: none;
+  }
+ 
+  .foto-marco img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+    filter: sepia(0.15) brightness(0.97);
+  }
+ 
+  .foto-caption {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 1.2rem;
+    color: #8b4a4a;
+    text-align: center;
+    margin-top: 0.75rem;
+    letter-spacing: 0.03em;
+    opacity: 0.8;
+  }
+ 
   /* ── ANIMACIONES ── */
   @keyframes fadeInText {
     from { opacity: 0; transform: translateY(8px); }
@@ -252,7 +298,7 @@
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 0.9; transform: translateY(0); }
   }
-
+ 
   /* mini corazón decorativo en carta */
   .heart-inline {
     display: inline-block;
@@ -269,15 +315,10 @@
 </style>
 </head>
 <body>
-
+ 
 <!-- Estrellas -->
 <canvas id="stars"></canvas>
-
-<!-- Audio -->
-<audio id="carta-audio" loop preload="auto">
-  <source src="YOU.mp3" type="audio/mpeg">
-</audio>
-
+ 
 <!-- PÁGINA 1 -->
 <div id="page1" class="page">
   <div id="thread-container">
@@ -295,16 +336,16 @@
   <p id="subtitle">para ti, siempre</p>
   <button id="open-btn"><span>Abrir carta</span></button>
 </div>
-
+ 
 <!-- PÁGINA 2 -->
 <div id="page2" class="page hidden">
   <div class="carta-envelope">
     <div class="carta-ornament">· · · ✦ · · ·</div>
-
+ 
     <div class="carta-saludo">Mi amor,</div>
-
+ 
     <div class="carta-body">
-
+ 
       <p>
         Hay cosas en la vida que no se eligen — simplemente suceden,
         como la lluvia, como el amanecer, como tú.
@@ -312,18 +353,18 @@
         en cada versión de cada vida que pudiera vivir.
         Tú eres mi destino, y lo supe desde el momento en que te encontré.
       </p>
-
+ 
       <span class="carta-highlight">Tú y yo escribiremos nuestra historia juntos.</span>
-
+ 
       <div class="carta-divider"><span>♥</span></div>
-
+ 
       <p>
         Eres <em>todo lo que amo</em>. No en la manera vaga en que esa frase
         se usa a veces, sino en la manera más profunda, más honesta,
         más verdadera que conozco. Eres todo lo que quiero en este mundo
         y todo lo que soy, gracias por todo lo que haces por mí.
       </p>
-
+ 
       <p>
         Amo todo lo que eres. No una parte selecta,
         no solo lo que muestras cuando te sientes bien —
@@ -331,16 +372,16 @@
         Amo cómo te expresas, cómo buscas las palabras exactas,
         cómo lo que dices siempre llega exactamente donde tenía que llegar.
       </p>
-
+ 
       <p>
         Amo cómo eres tú cuando nadie te está mirando.
         Amo tu manera de ver el mundo, de reírte,
         de enojarte, de querer. Amo cada contradicción tuya
         y cada certeza. Amas con todo, y eso me hace quererte más.
       </p>
-
+ 
       <div class="carta-divider"><span>♥</span></div>
-
+ 
       <p>
         Tú lo eres todo para mí. No como una exageración poética —
         sino como la verdad más clara que tengo.
@@ -348,7 +389,7 @@
         Cuando no estás, pienso en ti.
         Eres el hilo que atraviesa cada uno de mis días <span class="heart-inline">♥</span>
       </p>
-
+ 
       <p>
         Y quiero que sepas esto con absoluta certeza:
         <em>todo lo que siento por ti es sincero y verdadero.</em>
@@ -356,7 +397,12 @@
         Cada palabra, cada silencio, cada mirada — son tuyos.
         Siempre lo han sido.
       </p>
-
+ 
+      <div class="foto-marco">
+        <img src="YOU.jpg" alt="Nosotros" />
+        <span class="foto-caption">tú y yo, siempre</span>
+      </div>
+ 
       <div class="dedicatoria">
         <p>Para Mi Princesita linda,</p>
         <p>que me enseñaste que el amor no se describe — se vive.
@@ -366,29 +412,29 @@
         <br>
         <small>con todo lo que soy · para siempre</small>
       </div>
-
+ 
       <div class="firma">
         <p>Con amor,</p>
         <small>Tu latoso Fer</small>
       </div>
-
+ 
     </div>
   </div>
 </div>
-
+ 
 <script>
 /* ── ESTRELLAS ── */
 (function(){
   const c = document.getElementById('stars');
   const ctx = c.getContext('2d');
   let W, H, stars;
-
+ 
   function resize() {
     W = c.width = window.innerWidth;
     H = c.height = window.innerHeight;
     init();
   }
-
+ 
   function init() {
     stars = Array.from({length: 180}, () => ({
       x: Math.random() * W,
@@ -398,7 +444,7 @@
       s: (Math.random() - 0.5) * 0.003
     }));
   }
-
+ 
   function draw() {
     ctx.clearRect(0, 0, W, H);
     for (const s of stars) {
@@ -411,16 +457,16 @@
     }
     requestAnimationFrame(draw);
   }
-
+ 
   window.addEventListener('resize', resize);
   resize();
   draw();
 })();
-
+ 
 /* ── HILO → CORAZÓN ── */
 (function(){
   const path = document.getElementById('thread');
-
+ 
   function heartD(cx, cy, s) {
     return `M ${cx} ${cy + s*0.25}
       C ${cx} ${cy - s*0.1}, ${cx - s*0.55} ${cy - s*0.55}, ${cx - s*0.55} ${cy - s*0.2}
@@ -428,12 +474,12 @@
       C ${cx + s*0.2} ${cy + s*0.45}, ${cx + s*0.55} ${cy + s*0.15}, ${cx + s*0.55} ${cy - s*0.2}
       C ${cx + s*0.55} ${cy - s*0.55}, ${cx} ${cy - s*0.1}, ${cx} ${cy + s*0.25} Z`;
   }
-
+ 
   const straightD = 'M 0 100 Q 500 130 1000 100';
   const finalD = heartD(500, 110, 115);
-
+ 
   setTimeout(() => drawStraight(), 300);
-
+ 
   function drawStraight() {
     path.style.transition = 'none';
     path.setAttribute('d', straightD);
@@ -445,7 +491,7 @@
     path.style.strokeDashoffset = '0';
     setTimeout(() => transformToHeart(), 2600);
   }
-
+ 
   function transformToHeart() {
     const start = performance.now();
     const straightLen = path.getTotalLength();
@@ -459,7 +505,7 @@
     }
     requestAnimationFrame(erase);
   }
-
+ 
   function drawHeart() {
     path.setAttribute('d', finalD);
     path.style.strokeDasharray = '';
@@ -473,7 +519,7 @@
     path.style.strokeDashoffset = '0';
     setTimeout(() => pulseHeart(), 2200);
   }
-
+ 
   function pulseHeart() {
     const container = document.getElementById('thread-container');
     container.style.transition = 'transform 0.15s ease';
@@ -487,29 +533,16 @@
     }
     beat();
   }
-
+ 
   // Botón aparece a los 10 segundos
   setTimeout(() => {
     document.getElementById('open-btn').classList.add('visible');
   }, 10000);
-
+ 
   // Abrir carta
   document.getElementById('open-btn').addEventListener('click', () => {
     const p1 = document.getElementById('page1');
     const p2 = document.getElementById('page2');
-    const audio = document.getElementById('carta-audio');
-
-    // Reproducir canción
-    audio.volume = 0;
-    audio.play().catch(() => {});
-    // Fade in suave del volumen
-    let vol = 0;
-    const fadeIn = setInterval(() => {
-      vol = Math.min(vol + 0.04, 1);
-      audio.volume = vol;
-      if (vol >= 1) clearInterval(fadeIn);
-    }, 80);
-
     p1.classList.add('hidden');
     setTimeout(() => {
       p2.scrollTop = 0;
@@ -529,3 +562,4 @@
 </script>
 </body>
 </html>
+ 
