@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Angy</title>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --red: #c0392b;
+    --red-light: #e74c3c;
+    --red-glow: rgba(192, 57, 43, 0.4);
+    --gold: #d4a843;
+    --cream: #fdf6ec;
+    --dark: #1a0a0a;
+    --text: #2c1a1a;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--dark);
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* ── STARFIELD ── */
+  #stars {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── PÁGINAS ── */
+  .page {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 1;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .page.hidden {
+    opacity: 0; pointer-events: none;
+    transform: translateY(30px);
+  }
+
+  /* ── PÁGINA 1: HILO ── */
+  #page1 {
+    gap: 2rem;
+  }
+
+  #thread-container {
+    width: 100vw;
+    height: 220px;
+    position: relative;
+  }
+
+  #thread-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .thread-path {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 4px var(--red-glow));
+  }
+
+  /* ── SUBTITLE ── */
+  #subtitle {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 2rem;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(212, 168, 67, 0.4);
+    opacity: 0;
+    animation: fadeInText 1.5s ease 0.5s forwards;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── BOTÓN ── */
+  #open-btn {
+    opacity: 0;
+    padding: 0.75rem 2.5rem;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  #open-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  #open-btn:hover { color: var(--dark); }
+  #open-btn:hover::before { opacity: 1; }
+  #open-btn span { position: relative; z-index: 1; }
+  #open-btn.visible {
+    animation: fadeInBtn 1.2s ease forwards;
+  }
+
+  /* ── PÁGINA 2: CARTA ── */
+  #page2 {
+    padding: 3rem 1rem 3rem;
+    overflow-y: auto;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .carta-envelope {
+    max-width: 640px;
+    width: 100%;
+    background: linear-gradient(160deg, #fdf6ec 0%, #f7ead8 100%);
+    border: 1px solid rgba(212,168,67,0.3);
+    padding: 3.5rem 3.5rem 3rem;
+    position: relative;
+    box-shadow: 0 0 60px rgba(192,57,43,0.12), 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .carta-envelope::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .carta-envelope::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--red-light), transparent);
+  }
+
+  .carta-ornament {
+    text-align: center;
+    font-size: 1.4rem;
+    color: var(--red);
+    opacity: 0.6;
+    margin-bottom: 2rem;
+    letter-spacing: 0.5em;
+  }
+
+  .carta-saludo {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 2.6rem;
+    color: var(--red);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .carta-body p {
+    font-size: 1.125rem;
+    color: var(--text);
+    line-height: 1.9;
+    margin-bottom: 1.4rem;
+    font-weight: 300;
+  }
+
+  .carta-body em {
+    font-style: italic;
+    color: #6b1a1a;
+  }
+
+  .carta-highlight {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 1.6rem;
+    color: var(--red);
+    text-align: center;
+    display: block;
+    margin: 1.5rem 0;
+    line-height: 1.4;
+  }
+
+  .carta-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.8rem 0;
+    opacity: 0.4;
+  }
+  .carta-divider::before, .carta-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--red);
+  }
+  .carta-divider span {
+    font-size: 0.9rem;
+    color: var(--red);
+  }
+
+  .dedicatoria {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(192,57,43,0.2);
+    background: rgba(192,57,43,0.04);
+    text-align: center;
+  }
+
+  .dedicatoria p {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 1.5rem;
+    color: #6b1a1a;
+    line-height: 1.6;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .dedicatoria small {
+    font-style: italic;
+    font-size: 0.875rem;
+    color: #8b4a4a;
+    letter-spacing: 0.05em;
+  }
+
+  .firma {
+    margin-top: 2rem;
+    text-align: right;
+  }
+  .firma p {
+    font-family: 'Pinyon Script', cursive !important;
+    font-size: 2rem !important;
+    color: var(--red) !important;
+    margin-bottom: 0 !important;
+  }
+  .firma small {
+    font-size: 0.8rem;
+    color: #8b4a4a;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── ANIMACIONES ── */
+  @keyframes fadeInText {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInBtn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 0.9; transform: translateY(0); }
+  }
+
+  /* mini corazón decorativo en carta */
+  .heart-inline {
+    display: inline-block;
+    color: var(--red);
+    animation: heartbeat 1.4s ease infinite;
+  }
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    14% { transform: scale(1.3); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.2); }
+    56% { transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Estrellas -->
+<canvas id="stars"></canvas>
+
+<!-- Audio -->
+<audio id="carta-audio" loop preload="auto">
+  <source src="YOU.mp3" type="audio/mpeg">
+</audio>
+
+<!-- PÁGINA 1 -->
+<div id="page1" class="page">
+  <div id="thread-container">
+    <svg id="thread-svg" viewBox="0 0 1000 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2.5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- hilo con leve colgado (catenary), de lado a lado -->
+      <path id="thread" class="thread-path" filter="url(#glow)" d="M 0 100 Q 500 130 1000 100"/>
+    </svg>
+  </div>
+  <p id="subtitle">para ti, siempre</p>
+  <button id="open-btn"><span>Abrir carta</span></button>
+</div>
+
+<!-- PÁGINA 2 -->
+<div id="page2" class="page hidden">
+  <div class="carta-envelope">
+    <div class="carta-ornament">· · · ✦ · · ·</div>
+
+    <div class="carta-saludo">Mi amor,</div>
+
+    <div class="carta-body">
+
+      <p>
+        Hay cosas en la vida que no se eligen — simplemente suceden,
+        como la lluvia, como el amanecer, como tú.
+        Pero si pudiera elegir, te elegiría a ti <em>una y otra vez</em>,
+        en cada versión de cada vida que pudiera vivir.
+        Tú eres mi destino, y lo supe desde el momento en que te encontré.
+      </p>
+
+      <span class="carta-highlight">Tú y yo escribiremos nuestra historia juntos.</span>
+
+      <div class="carta-divider"><span>♥</span></div>
+
+      <p>
+        Eres <em>todo lo que amo</em>. No en la manera vaga en que esa frase
+        se usa a veces, sino en la manera más profunda, más honesta,
+        más verdadera que conozco. Eres todo lo que quiero en este mundo
+        y todo lo que soy, gracias por todo lo que haces por mí.
+      </p>
+
+      <p>
+        Amo todo lo que eres. No una parte selecta,
+        no solo lo que muestras cuando te sientes bien —
+        <em>todo</em>. Amo cómo sientes las cosas con esa intensidad silenciosa.
+        Amo cómo te expresas, cómo buscas las palabras exactas,
+        cómo lo que dices siempre llega exactamente donde tenía que llegar.
+      </p>
+
+      <p>
+        Amo cómo eres tú cuando nadie te está mirando.
+        Amo tu manera de ver el mundo, de reírte,
+        de enojarte, de querer. Amo cada contradicción tuya
+        y cada certeza. Amas con todo, y eso me hace quererte más.
+      </p>
+
+      <div class="carta-divider"><span>♥</span></div>
+
+      <p>
+        Tú lo eres todo para mí. No como una exageración poética —
+        sino como la verdad más clara que tengo.
+        Cuando estás, todo tiene sentido.
+        Cuando no estás, pienso en ti.
+        Eres el hilo que atraviesa cada uno de mis días <span class="heart-inline">♥</span>
+      </p>
+
+      <p>
+        Y quiero que sepas esto con absoluta certeza:
+        <em>todo lo que siento por ti es sincero y verdadero.</em>
+        No hay nada en mí que no sea tuyo cuando te digo que te quiero.
+        Cada palabra, cada silencio, cada mirada — son tuyos.
+        Siempre lo han sido.
+      </p>
+
+      <div class="dedicatoria">
+        <p>Para Mi Princesita linda,</p>
+        <p>que me enseñaste que el amor no se describe — se vive.
+          <p>Porqué contigo todo mi amor siempre es recibido, todo</p>
+          <p>es tan lindo, tan real, y yo quiero amarte y cuidarte siempre.</p>
+        </p>
+        <br>
+        <small>con todo lo que soy · para siempre</small>
+      </div>
+
+      <div class="firma">
+        <p>Con amor,</p>
+        <small>Tu latoso Fer</small>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── ESTRELLAS ── */
+(function(){
+  const c = document.getElementById('stars');
+  const ctx = c.getContext('2d');
+  let W, H, stars;
+
+  function resize() {
+    W = c.width = window.innerWidth;
+    H = c.height = window.innerHeight;
+    init();
+  }
+
+  function init() {
+    stars = Array.from({length: 180}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.2,
+      a: Math.random(),
+      s: (Math.random() - 0.5) * 0.003
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      s.a += s.s;
+      if (s.a <= 0 || s.a >= 1) s.s *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,245,220,${s.a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+})();
+
+/* ── HILO → CORAZÓN ── */
+(function(){
+  const path = document.getElementById('thread');
+
+  function heartD(cx, cy, s) {
+    return `M ${cx} ${cy + s*0.25}
+      C ${cx} ${cy - s*0.1}, ${cx - s*0.55} ${cy - s*0.55}, ${cx - s*0.55} ${cy - s*0.2}
+      C ${cx - s*0.55} ${cy + s*0.15}, ${cx - s*0.2} ${cy + s*0.45}, ${cx} ${cy + s*0.7}
+      C ${cx + s*0.2} ${cy + s*0.45}, ${cx + s*0.55} ${cy + s*0.15}, ${cx + s*0.55} ${cy - s*0.2}
+      C ${cx + s*0.55} ${cy - s*0.55}, ${cx} ${cy - s*0.1}, ${cx} ${cy + s*0.25} Z`;
+  }
+
+  const straightD = 'M 0 100 Q 500 130 1000 100';
+  const finalD = heartD(500, 110, 115);
+
+  setTimeout(() => drawStraight(), 300);
+
+  function drawStraight() {
+    path.style.transition = 'none';
+    path.setAttribute('d', straightD);
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = len;
+    path.style.strokeDashoffset = len;
+    path.getBoundingClientRect();
+    path.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.4,0,0.2,1)';
+    path.style.strokeDashoffset = '0';
+    setTimeout(() => transformToHeart(), 2600);
+  }
+
+  function transformToHeart() {
+    const start = performance.now();
+    const straightLen = path.getTotalLength();
+    function ease(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+    function erase(now) {
+      const t = Math.min((now - start) / 880, 1);
+      path.style.transition = 'none';
+      path.style.strokeDashoffset = straightLen * ease(t);
+      if (t < 1) requestAnimationFrame(erase);
+      else drawHeart();
+    }
+    requestAnimationFrame(erase);
+  }
+
+  function drawHeart() {
+    path.setAttribute('d', finalD);
+    path.style.strokeDasharray = '';
+    path.style.strokeDashoffset = '';
+    path.style.transition = 'none';
+    const hLen = path.getTotalLength();
+    path.style.strokeDasharray = hLen;
+    path.style.strokeDashoffset = hLen;
+    path.getBoundingClientRect();
+    path.style.transition = 'stroke-dashoffset 2s cubic-bezier(0.25,0.46,0.45,0.94)';
+    path.style.strokeDashoffset = '0';
+    setTimeout(() => pulseHeart(), 2200);
+  }
+
+  function pulseHeart() {
+    const container = document.getElementById('thread-container');
+    container.style.transition = 'transform 0.15s ease';
+    let count = 0;
+    const beats = [1.07, 1, 1.04, 1, 1.02, 1];
+    function beat() {
+      if (count >= beats.length) return;
+      container.style.transform = `scale(${beats[count]})`;
+      count++;
+      setTimeout(beat, 180);
+    }
+    beat();
+  }
+
+  // Botón aparece a los 10 segundos
+  setTimeout(() => {
+    document.getElementById('open-btn').classList.add('visible');
+  }, 10000);
+
+  // Abrir carta
+  document.getElementById('open-btn').addEventListener('click', () => {
+    const p1 = document.getElementById('page1');
+    const p2 = document.getElementById('page2');
+    const audio = document.getElementById('carta-audio');
+
+    // Reproducir canción
+    audio.volume = 0;
+    audio.play().catch(() => {});
+    // Fade in suave del volumen
+    let vol = 0;
+    const fadeIn = setInterval(() => {
+      vol = Math.min(vol + 0.04, 1);
+      audio.volume = vol;
+      if (vol >= 1) clearInterval(fadeIn);
+    }, 80);
+
+    p1.classList.add('hidden');
+    setTimeout(() => {
+      p2.scrollTop = 0;
+      p2.classList.remove('hidden');
+      const carta = document.querySelector('.carta-envelope');
+      carta.style.opacity = '0';
+      carta.style.transform = 'translateY(24px)';
+      carta.style.transition = 'none';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        carta.style.transition = 'opacity 1s ease, transform 1s ease';
+        carta.style.opacity = '1';
+        carta.style.transform = 'translateY(0)';
+      }));
+    }, 600);
+  });
+})();
+</script>
+</body>
+</html>
